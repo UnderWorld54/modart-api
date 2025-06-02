@@ -3,8 +3,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 
 import { connectDB } from './config/database';
+import { swaggerSpec } from './config/swagger';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import { errorHandler, notFound } from './middleware/errorHandler';
@@ -19,6 +21,7 @@ class App {
     this.app = express();
     this.connectDatabase();
     this.initializeMiddleware();
+    this.initializeSwagger();
     this.initializeRoutes();
     this.initializeErrorHandling();
   }
@@ -33,6 +36,10 @@ class App {
     this.app.use(morgan('combined'));
     this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true }));
+  }
+
+  private initializeSwagger(): void {
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
 
   private initializeRoutes(): void {
