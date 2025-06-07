@@ -10,8 +10,8 @@
 
 1. Clonez le repository
 ```bash
-git 
-cd 
+git clone https://github.com/UnderWorld54/modart-api
+cd modart-api
 ```
 
 2. Installez les dépendances :
@@ -56,32 +56,53 @@ npm run docker:down
 
 ## Documentation des Routes API
 
-### Authentification
+### Accès à la documentation Swagger
 
-#### Inscription
-```http
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "nom": "Doe",
-  "prenom": "John",
-  "role": "ETUDIANT"
-}
+L'interface Swagger est disponible à l'adresse :
+```
+http://localhost:3000/api-docs
 ```
 
-#### Connexion
+Vous pouvez y tester toutes les routes de l'API directement depuis votre navigateur.
+
+### Seeds (Données de test)
+
+Pour insérer des utilisateurs et des événements de test dans la base de données, utilisez les scripts suivants :
+
+- **Seeder les utilisateurs** :
+  ```bash
+  npm run seed:users
+  ```
+- **Seeder les événements (défilés de mode)** :
+  ```bash
+  npm run seed:events
+  ```
+- **Tout seed d'un coup (utilisateurs + événements)** :
+  ```bash
+  npm run seed:all
+  ```
+
+> **Remarque :** Les seeds suppriment les anciennes données avant d'insérer les nouvelles.
+
+### Connexion avec l'utilisateur admin
+
+Après avoir seedé la base, vous pouvez vous connecter avec l'utilisateur admin :
+
+- **Email** : `admin@example.com`
+- **Mot de passe** : `admin123`
+
+Exemple de requête (Postman, Swagger ou curl) :
 ```http
 POST /api/auth/login
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
-  "password": "password123"
+  "email": "admin@example.com",
+  "password": "admin123"
 }
 ```
+
+La réponse contiendra un token JWT à utiliser dans les routes protégées (ex : création/modification/suppression d'événements).
 
 ### Utilisateurs
 

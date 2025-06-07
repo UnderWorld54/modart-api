@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import User from '../models/User';
 import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 dotenv.config();
 
@@ -40,6 +41,11 @@ const seedUsers = async () => {
     // Suppression des utilisateurs existants
     await User.deleteMany({});
     console.log('Cleared existing users');
+
+    // Hash des mots de passe
+    for (const user of users) {
+      user.password = await bcrypt.hash(user.password, 12);
+    }
 
     // Création des nouveaux utilisateurs
     await User.insertMany(users);
