@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
 import { ApiResponse, IUser } from '../types';
+import { logger } from '../utils/logger';
 
 export class UserController {
   private userService: UserService;
@@ -13,6 +14,7 @@ export class UserController {
     try {
       const userData: IUser = req.body;
       const user = await this.userService.createUser(userData);
+      logger.info('Utilisateur créé par admin', { email: user.email, id: user._id, by: req.user?._id });
       
       const response: ApiResponse<IUser> = {
         success: true,
@@ -22,6 +24,7 @@ export class UserController {
       
       res.status(201).json(response);
     } catch (error) {
+      logger.error('Erreur lors de la création d\'un utilisateur', { error });
       const response: ApiResponse<null> = {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'

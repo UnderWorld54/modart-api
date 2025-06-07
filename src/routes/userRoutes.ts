@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/userController';
 import { authenticate, authorize } from '../middleware/auth';
+import { registerSchema } from '../controllers/authController';
+import { validateBody } from '../middleware/validate';
 
 const router = Router();
 const userController = new UserController();
@@ -135,5 +137,31 @@ router.get('/', authorize('admin'), userController.getAllUsers);
 router.get('/:id', userController.getUserById);
 router.put('/:id', userController.updateUser);
 router.delete('/:id', authorize('admin'), userController.deleteUser);
+
+/**
+ * @swagger
+ * /api/users/add-user:
+ *   post:
+ *     summary: Ajouter un utilisateur (Admin uniquement)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserUpdate'
+ *     responses:
+ *       201:
+ *         description: Utilisateur créé avec succès
+ *       400:
+ *         description: Données invalides
+ *       401:
+ *         description: Non authentifié
+ *       403:
+ *         description: Accès non autorisé (Admin uniquement)
+ */
+router.post('/add-user', authorize('admin'), validateBody(registerSchema), userController.createUser);
 
 export default router;
