@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/authService';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../types';
+import { logger } from '../utils/logger';
 
 export class AuthController {
   private authService: AuthService;
@@ -43,8 +44,10 @@ export class AuthController {
         message: 'User registered successfully'
       };
       
+      logger.info('Nouvel utilisateur enregistré', { email: user.email, id: user._id });
       res.status(201).json(response);
     } catch (error) {
+      logger.error('Erreur lors de l\'enregistrement', { error });
       const response: AuthResponse = {
         success: false,
         error: error instanceof Error ? error.message : 'Registration failed'
@@ -78,8 +81,10 @@ export class AuthController {
         message: 'Login successful'
       };
       
+      logger.info('Connexion réussie', { email: user.email, id: user._id });
       res.status(200).json(response);
     } catch (error) {
+      logger.warn('Échec de connexion', { email: req.body?.email, error });
       const response = {
         success: false,
         error: error instanceof Error ? error.message : 'Login failed'
@@ -189,7 +194,9 @@ export class AuthController {
       }
       const { token, refreshToken: newRefreshToken } = await this.authService.refreshToken(refreshToken);
       res.status(200).json({ success: true, token, refreshToken: newRefreshToken });
+      logger.info('Refresh token utilisé', { refreshToken: req.body.refreshToken });
     } catch (error) {
+      logger.warn('Échec de refresh token', { refreshToken: req.body.refreshToken, error });
       res.status(401).json({ success: false, error: error instanceof Error ? error.message : 'Invalid refresh token' });
     }
   };

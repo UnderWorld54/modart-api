@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { EventService } from '../services/eventService';
 import { IEvent } from '../types';
 import { ApiResponse } from '../types';
+import { logger } from '../utils/logger';
 
 export class EventController {
   private eventService: EventService;
@@ -26,8 +27,10 @@ export class EventController {
         message: 'Event created successfully'
       };
       
+      logger.info('Événement créé', { eventId: event._id, title: event.title, by: req.user?._id });
       res.status(201).json(response);
     } catch (error) {
+      logger.error('Erreur lors de la création d\'un événement', { error });
       const response: ApiResponse<null> = {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -111,8 +114,10 @@ export class EventController {
         message: 'Event updated successfully'
       };
       
+      logger.info('Événement modifié', { eventId: event?._id, by: req.user?._id });
       res.status(200).json(response);
     } catch (error) {
+      logger.error('Erreur lors de la modification d\'un événement', { error });
       const response: ApiResponse<null> = {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -141,8 +146,10 @@ export class EventController {
         message: 'Event deleted successfully'
       };
       
+      logger.info('Événement supprimé', { eventId: event?._id, by: req.user?._id });
       res.status(200).json(response);
     } catch (error) {
+      logger.error('Erreur lors de la suppression d\'un événement', { error });
       const response: ApiResponse<null> = {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
