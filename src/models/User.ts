@@ -40,7 +40,20 @@ const UserSchema: Schema = new Schema(
     refreshToken: {
       type: String,
       default: null
-    }
+    },
+    socials: [
+      {
+        platform: {
+          type: String,
+          enum: ['instagram', 'facebook', 'linkedin', 'twitter', 'tiktok'],
+          required: true
+        },
+        url: {
+          type: String,
+          required: true
+        }
+      }
+    ]
   },
   {
     timestamps: true

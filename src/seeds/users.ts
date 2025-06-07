@@ -12,7 +12,11 @@ const users = [
     password: 'admin123',
     age: 30,
     role: 'admin',
-    isActive: true
+    isActive: true,
+    socials: [
+      { platform: 'linkedin', url: 'https://linkedin.com/in/adminuser' },
+      { platform: 'instagram', url: 'https://instagram.com/adminuser' }
+    ]
   },
   {
     name: 'John Doe',
@@ -20,7 +24,11 @@ const users = [
     password: 'user123',
     age: 25,
     role: 'user',
-    isActive: true
+    isActive: true,
+    socials: [
+      { platform: 'facebook', url: 'https://facebook.com/johndoe' },
+      { platform: 'twitter', url: 'https://twitter.com/johndoe' }
+    ]
   },
   {
     name: 'Jane Smith',
@@ -28,7 +36,11 @@ const users = [
     password: 'user123',
     age: 28,
     role: 'user',
-    isActive: true
+    isActive: true,
+    socials: [
+      { platform: 'instagram', url: 'https://instagram.com/janesmith' },
+      { platform: 'tiktok', url: 'https://tiktok.com/@janesmith' }
+    ]
   }
 ];
 

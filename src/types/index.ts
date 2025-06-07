@@ -1,5 +1,10 @@
 import { Types } from 'mongoose';
 
+export interface SocialLink {
+  platform: 'instagram' | 'facebook' | 'linkedin' | 'twitter' | 'tiktok';
+  url: string;
+}
+
 export interface IUser {
   _id?: string;
   name: string;
@@ -9,6 +14,7 @@ export interface IUser {
   role?: 'user' | 'admin';
   isActive?: boolean;
   refreshToken?: string | null;
+  socials?: SocialLink[];
   createdAt?: Date;
   updatedAt?: Date;
 }
