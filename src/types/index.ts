@@ -60,4 +60,22 @@ declare global {
   }
 }
 
+export interface IEvent {
+  _id?: string;
+  title: string;
+  description: string;
+  start_date: Date;
+  end_date: Date;
+  location: string;
+  isActive?: boolean;
+  createdBy: Types.ObjectId | string;
+  updatedBy: Types.ObjectId | string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IEventDocument extends IEvent {
+  // Méthodes spécifiques à l'événement si nécessaire
+}
+
 // --- Ajout des entités principales ---

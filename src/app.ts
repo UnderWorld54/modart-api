@@ -9,6 +9,7 @@ import { connectDB } from './config/database';
 import { swaggerSpec } from './config/swagger';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import eventRoutes from './routes/eventRoutes';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
 // Configuration
@@ -55,6 +56,7 @@ class App {
     // Routes API
     this.app.use('/api/auth', authRoutes);
     this.app.use('/api/users', userRoutes);
+    this.app.use('/api/events', eventRoutes);
   }
 
   private initializeErrorHandling(): void {
