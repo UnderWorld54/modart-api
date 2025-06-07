@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { EventController } from '../controllers/eventController';
+import { EventController, eventSchema } from '../controllers/eventController';
 import { authenticate, authorize } from '../middleware/auth';
+import { validateBody } from '../middleware/validate';
 
 const router = Router();
 const eventController = new EventController();
@@ -203,8 +204,8 @@ router.get('/:id', eventController.getEventById);
 router.use(authenticate);
 
 // Routes accessibles uniquement aux administrateurs
-router.post('/', authorize('admin'), eventController.createEvent);
-router.put('/:id', authorize('admin'), eventController.updateEvent);
+router.post('/', authorize('admin'), validateBody(eventSchema), eventController.createEvent);
+router.put('/:id', authorize('admin'), validateBody(eventSchema), eventController.updateEvent);
 router.delete('/:id', authorize('admin'), eventController.deleteEvent);
 
 export default router; 

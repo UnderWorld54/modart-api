@@ -3,6 +3,17 @@ import { EventService } from '../services/eventService';
 import { IEvent } from '../types';
 import { ApiResponse } from '../types';
 import { logger } from '../utils/logger';
+import Joi from 'joi';
+import { validateBody } from '../middleware/validate';
+
+export const eventSchema = Joi.object({
+  title: Joi.string().max(100).required(),
+  description: Joi.string().required(),
+  start_date: Joi.date().iso().required(),
+  end_date: Joi.date().iso().greater(Joi.ref('start_date')).required(),
+  location: Joi.string().required(),
+  isActive: Joi.boolean().optional()
+});
 
 export class EventController {
   private eventService: EventService;

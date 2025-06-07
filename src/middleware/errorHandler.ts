@@ -1,29 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import { ApiResponse } from '../types';
+import { logger } from '../utils/logger';
 
-export const errorHandler = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
-  console.error(err.stack);
-
-  const response: ApiResponse<null> = {
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+  logger.error('Erreur API', { err, url: req.originalUrl, method: req.method });
+  const status = err.status || 500;
+  res.status(status).json({
     success: false,
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Something went wrong!' 
-      : err.message
-  };
-
-  res.status(500).json(response);
+    error: err.message || 'Internal Server Error',
+    details: err.details || undefined
+  });
 };
 
-export const notFound = (req: Request, res: Response, next: NextFunction): void => {
-  const response: ApiResponse<null> = {
+export const notFound = (req: Request, res: Response) => {
+  res.status(404).json({
     success: false,
-    error: `Route ${req.originalUrl} not found`
-  };
-  
-  res.status(404).json(response);
+    error: 'Not Found',
+    url: req.originalUrl
+  });
 };

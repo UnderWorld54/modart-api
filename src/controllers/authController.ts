@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { AuthService } from '../services/authService';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../types';
 import { logger } from '../utils/logger';
+import Joi from 'joi';
+import { validateBody } from '../middleware/validate';
 
 export class AuthController {
   private authService: AuthService;
@@ -201,3 +203,15 @@ export class AuthController {
     }
   };
 }
+
+export const registerSchema = Joi.object({
+  name: Joi.string().min(2).max(50).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  age: Joi.number().min(0).max(120).optional()
+});
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required()
+});

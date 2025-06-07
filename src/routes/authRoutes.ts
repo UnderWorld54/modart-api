@@ -1,9 +1,23 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/authController';
 import { authenticate } from '../middleware/auth';
+import { registerSchema, loginSchema } from '../controllers/authController';
+import { validateBody } from '../middleware/validate';
+import rateLimit from 'express-rate-limit';
 
 const router = Router();
 const authController = new AuthController();
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 tentatives par IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many login attempts, please try again in 15 minutes.'
+  }
+});
 
 /**
  * @swagger
@@ -51,7 +65,7 @@ const authController = new AuthController();
  *       400:
  *         description: Données invalides
  */
-router.post('/register', authController.register);
+router.post('/register', validateBody(registerSchema), authController.register);
 
 /**
  * @swagger
@@ -75,7 +89,7 @@ router.post('/register', authController.register);
  *       401:
  *         description: Identifiants invalides
  */
-router.post('/login', authController.login);
+router.post('/login', loginLimiter, validateBody(loginSchema), authController.login);
 
 /**
  * @swagger
