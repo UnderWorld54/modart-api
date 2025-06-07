@@ -8,7 +8,7 @@
 
 ## Installation
 
-1. Clonez le repository :
+1. Clonez le repository
 ```bash
 git 
 cd 
