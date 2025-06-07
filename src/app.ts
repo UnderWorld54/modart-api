@@ -11,6 +11,7 @@ import { swaggerSpec } from './config/swagger';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import eventRoutes from './routes/eventRoutes';
+import projectRoutes from './routes/projectRoutes';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
 // Configuration
@@ -68,6 +69,7 @@ class App {
     this.app.use('/api/auth', authRoutes);
     this.app.use('/api/users', userRoutes);
     this.app.use('/api/events', eventRoutes);
+    this.app.use('/api/projects', projectRoutes);
   }
 
   private initializeErrorHandling(): void {

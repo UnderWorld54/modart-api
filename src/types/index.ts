@@ -15,6 +15,7 @@ export interface IUser {
   isActive?: boolean;
   refreshToken?: string | null;
   socials?: SocialLink[];
+  projects?: IProject[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -83,6 +84,20 @@ export interface IEvent {
 
 export interface IEventDocument extends IEvent {
   // Méthodes spécifiques à l'événement si nécessaire
+}
+
+export interface IProject {
+  _id?: string;
+  title: string;
+  description: string;
+  externalUrl?: string;
+  createdBy: Types.ObjectId | string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IProjectDocument extends IProject {
+  // Méthodes spécifiques au projet si besoin
 }
 
 // --- Ajout des entités principales ---

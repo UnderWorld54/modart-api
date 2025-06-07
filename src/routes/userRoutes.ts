@@ -30,6 +30,39 @@ const userController = new UserController();
  *           description: Rôle de l'utilisateur
  */
 
+
+/**
+ * @swagger
+ * /api/users/{id}/projects:
+ *   get:
+ *     summary: Liste les projets d'un utilisateur
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de l'utilisateur
+ *     responses:
+ *       200:
+ *         description: Liste des projets de l'utilisateur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Project'
+ */
+router.get('/:id/projects', userController.getUserProjects);
+
+
+
 // Toutes les routes utilisateurs nécessitent une authentification
 router.use(authenticate);
 
@@ -163,5 +196,6 @@ router.delete('/:id', authorize('admin'), userController.deleteUser);
  *         description: Accès non autorisé (Admin uniquement)
  */
 router.post('/add-user', authorize('admin'), validateBody(registerSchema), userController.createUser);
+
 
 export default router;

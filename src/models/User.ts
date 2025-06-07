@@ -89,4 +89,14 @@ UserSchema.methods.toJSON = function() {
   return user;
 };
 
+UserSchema.virtual('projects', {
+  ref: 'Project',
+  localField: '_id',
+  foreignField: 'createdBy',
+  justOne: false
+});
+
+UserSchema.set('toObject', { virtuals: true });
+UserSchema.set('toJSON', { virtuals: true });
+
 export default mongoose.model<IUserDocument & Document>('User', UserSchema);

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import User from '../models/User';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
+import Project from '../models/Project';
 
 dotenv.config();
 
@@ -44,6 +45,33 @@ const users = [
   }
 ];
 
+const projects = [
+  // Projets pour John Doe
+  {
+    title: 'Collection Streetwear 2024',
+    description: "Projet de création d'une collection streetwear inspirée des tendances urbaines.",
+    externalUrl: 'https://behance.net/johndoe-streetwear',
+    createdByEmail: 'john@example.com'
+  },
+  {
+    title: 'Accessoires éco-responsables',
+    description: "Conception d'accessoires de mode à partir de matériaux recyclés.",
+    createdByEmail: 'john@example.com'
+  },
+  // Projets pour Jane Smith
+  {
+    title: 'Défilé Futuriste',
+    description: "Organisation d'un défilé sur le thème du futur et des nouvelles technologies.",
+    externalUrl: 'https://janesmith-portfolio.com/futuriste',
+    createdByEmail: 'jane@example.com'
+  },
+  {
+    title: 'Robe connectée',
+    description: "Création d'une robe intégrant des capteurs et des LEDs pour un effet interactif.",
+    createdByEmail: 'jane@example.com'
+  }
+];
+
 const seedUsers = async () => {
   try {
     // Connexion à MongoDB
@@ -60,8 +88,22 @@ const seedUsers = async () => {
     }
 
     // Création des nouveaux utilisateurs
-    await User.insertMany(users);
+    const insertedUsers = await User.insertMany(users);
     console.log('Users seeded successfully');
+
+    // Création des projets de mode pour les étudiants
+    for (const project of projects) {
+      const user = insertedUsers.find(u => u.email === project.createdByEmail);
+      if (user) {
+        await Project.create({
+          title: project.title,
+          description: project.description,
+          externalUrl: project.externalUrl,
+          createdBy: user._id
+        });
+      }
+    }
+    console.log('Projects seeded successfully');
 
     // Déconnexion de MongoDB
     await mongoose.disconnect();

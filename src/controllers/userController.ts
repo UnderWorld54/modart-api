@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
 import { ApiResponse, IUser } from '../types';
 import { logger } from '../utils/logger';
+import Project from '../models/Project';
 
 export class UserController {
   private userService: UserService;
@@ -141,6 +142,16 @@ export class UserController {
         error: error instanceof Error ? error.message : 'Unknown error'
       };
       res.status(500).json(response);
+    }
+  };
+
+  getUserProjects = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const projects = await Project.find({ createdBy: id });
+      res.status(200).json({ success: true, data: projects });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error instanceof Error ? error.message : 'Erreur inconnue' });
     }
   };
 }
