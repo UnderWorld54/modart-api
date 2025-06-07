@@ -66,20 +66,21 @@ export class AuthController {
         return;
       }
 
-      const { user, token } = await this.authService.login(credentials);
+      const { user, token, refreshToken } = await this.authService.login(credentials);
       
-      const response: AuthResponse = {
+      const response = {
         success: true,
         data: {
           user: user.toJSON(),
-          token
+          token,
+          refreshToken
         },
         message: 'Login successful'
       };
       
       res.status(200).json(response);
     } catch (error) {
-      const response: AuthResponse = {
+      const response = {
         success: false,
         error: error instanceof Error ? error.message : 'Login failed'
       };
@@ -176,6 +177,20 @@ export class AuthController {
         error: error instanceof Error ? error.message : 'Password change failed'
       };
       res.status(400).json(response);
+    }
+  };
+
+  refresh = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { refreshToken } = req.body;
+      if (!refreshToken) {
+        res.status(400).json({ success: false, error: 'Refresh token is required' });
+        return;
+      }
+      const { token, refreshToken: newRefreshToken } = await this.authService.refreshToken(refreshToken);
+      res.status(200).json({ success: true, token, refreshToken: newRefreshToken });
+    } catch (error) {
+      res.status(401).json({ success: false, error: error instanceof Error ? error.message : 'Invalid refresh token' });
     }
   };
 }

@@ -129,4 +129,30 @@ router.get('/profile', authenticate, authController.getProfile);
  */
 router.put('/change-password', authenticate, authController.changePassword);
 
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Rafraîchir le token d'accès avec un refresh token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: Le refresh token
+ *     responses:
+ *       200:
+ *         description: Nouveau token d'accès et refresh token
+ *       400:
+ *         description: Refresh token manquant
+ *       401:
+ *         description: Refresh token invalide
+ */
+router.post('/refresh', authController.refresh);
+
 export default router;

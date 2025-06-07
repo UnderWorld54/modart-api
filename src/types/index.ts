@@ -8,6 +8,7 @@ export interface IUser {
   age?: number;
   role?: 'user' | 'admin';
   isActive?: boolean;
+  refreshToken?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
