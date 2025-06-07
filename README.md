@@ -14,14 +14,39 @@ git clone https://github.com/UnderWorld54/modart-api
 cd modart-api
 ```
 
-2. Installez les dépendances :
+## Démarrage avec Docker
+
+Pour lancer l'application en mode développement avec Docker :
+
+```bash
+# Construire et démarrer les conteneurs
+docker-compose up --build
+
+# Pour arrêter les conteneurs
+docker-compose down
+```
+
+L'application sera accessible à l'adresse : `http://localhost:3000`
+
+Les seeds sont exécutés automatiquement au démarrage.
+
+### Connexion avec l'utilisateur admin
+
+Après le démarrage, vous pouvez vous connecter avec l'utilisateur admin :
+
+- **Email** : `admin@example.com`
+- **Mot de passe** : `admin123`
+
+## Démarrage sans Docker (Alternative)
+
+Si vous préférez lancer l'application sans Docker :
+
+1. Installez les dépendances :
 ```bash
 npm install
 ```
 
-## Configuration
-
-1. Créez un fichier `.env` à la racine du projet avec les variables d'environnement suivantes :
+2. Créez un fichier `.env` à la racine du projet avec les variables d'environnement suivantes :
 ```env
 NODE_ENV=development
 PORT=3000
@@ -31,27 +56,9 @@ JWT_EXPIRES_IN=7d
 BCRYPT_SALT_ROUNDS=12
 ```
 
-## Démarrage
-
-### Développement
-
-Pour lancer le serveur en mode développement :
+3. Lancez le serveur en mode développement :
 ```bash
 npm run dev
-```
-
-### Docker
-
-Pour lancer l'application avec Docker :
-```bash
-# Démarrer les conteneurs
-npm run docker:up
-
-# Voir les logs
-npm run docker:logs
-
-# Arrêter les conteneurs
-npm run docker:down
 ```
 
 ## Documentation des Routes API
@@ -67,7 +74,7 @@ Vous pouvez y tester toutes les routes de l'API directement depuis votre navigat
 
 ### Seeds (Données de test)
 
-Pour insérer des utilisateurs, des événements et des projets de test dans la base de données, utilisez les scripts suivants :
+Si vous n'utilisez pas Docker, vous pouvez exécuter les seeds manuellement :
 
 - **Seeder les utilisateurs** :
   ```bash
@@ -83,26 +90,6 @@ Pour insérer des utilisateurs, des événements et des projets de test dans la 
   ```
 
 > **Remarque :** Les seeds suppriment les anciennes données avant d'insérer les nouvelles.
-
-### Connexion avec l'utilisateur admin
-
-Après avoir seedé la base, vous pouvez vous connecter avec l'utilisateur admin :
-
-- **Email** : `admin@example.com`
-- **Mot de passe** : `admin123`
-
-Exemple de requête (Postman, Swagger ou curl) :
-```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "admin@example.com",
-  "password": "admin123"
-}
-```
-
-La réponse contiendra un token JWT à utiliser dans les routes protégées (ex : création/modification/suppression d'événements).
 
 ### Utilisateurs
 
