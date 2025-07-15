@@ -4,9 +4,6 @@ import { IEvent } from '../types';
 import { ApiResponse } from '../types';
 import { logger } from '../utils/logger';
 import Joi from 'joi';
-import { validateBody } from '../middleware/validate';
-import Project from '../models/Project';
-import { IProject } from '../types';
 
 export const eventSchema = Joi.object({
   title: Joi.string().max(100).required(),
@@ -17,12 +14,6 @@ export const eventSchema = Joi.object({
   isActive: Joi.boolean().optional()
 });
 
-export const projectSchema = Joi.object({
-  title: Joi.string().max(100).required(),
-  description: Joi.string().required(),
-  externalUrl: Joi.string().uri().optional()
-});
-
 export class EventController {
   private eventService: EventService;
 
@@ -30,6 +21,79 @@ export class EventController {
     this.eventService = new EventService();
   }
 
+  /**
+   * @swagger
+   * /api/events:
+   *   post:
+   *     summary: Créer un nouvel événement
+   *     tags: [Events]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - title
+   *               - description
+   *               - start_date
+   *               - end_date
+   *               - location
+   *             properties:
+   *               title:
+   *                 type: string
+   *                 maxLength: 100
+   *                 description: Titre de l'événement
+   *               description:
+   *                 type: string
+   *                 description: Description de l'événement
+   *               start_date:
+   *                 type: string
+   *                 format: date-time
+   *                 description: Date et heure de début de l'événement
+   *               end_date:
+   *                 type: string
+   *                 format: date-time
+   *                 description: Date et heure de fin de l'événement
+   *               location:
+   *                 type: string
+   *                 description: Lieu de l'événement
+   *               isActive:
+   *                 type: boolean
+   *                 description: Statut actif de l'événement
+   *     responses:
+   *       201:
+   *         description: Événement créé avec succès
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   $ref: '#/components/schemas/Event'
+   *                 message:
+   *                   type: string
+   *                   example: Event created successfully
+   *       400:
+   *         description: Données invalides
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: false
+   *                 error:
+   *                   type: string
+   *       401:
+   *         description: Non authentifié
+   */
   createEvent = async (req: Request, res: Response): Promise<void> => {
     try {
       const eventData: IEvent = {
@@ -58,6 +122,33 @@ export class EventController {
     }
   };
 
+  /**
+   * @swagger
+   * /api/events:
+   *   get:
+   *     summary: Récupérer tous les événements
+   *     tags: [Events]
+   *     responses:
+   *       200:
+   *         description: Liste de tous les événements
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Event'
+   *                 message:
+   *                   type: string
+   *                   example: Retrieved 5 events
+   *       500:
+   *         description: Erreur serveur
+   */
   getAllEvents = async (req: Request, res: Response): Promise<void> => {
     try {
       const events = await this.eventService.getAllEvents();
@@ -78,6 +169,51 @@ export class EventController {
     }
   };
 
+  /**
+   * @swagger
+   * /api/events/{id}:
+   *   get:
+   *     summary: Récupérer un événement par ID
+   *     tags: [Events]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID de l'événement
+   *     responses:
+   *       200:
+   *         description: Événement trouvé
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   $ref: '#/components/schemas/Event'
+   *                 message:
+   *                   type: string
+   *                   example: Event retrieved successfully
+   *       404:
+   *         description: Événement non trouvé
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: false
+   *                 error:
+   *                   type: string
+   *                   example: Event not found
+   *       500:
+   *         description: Erreur serveur
+   */
   getEventById = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -108,6 +244,72 @@ export class EventController {
     }
   };
 
+  /**
+   * @swagger
+   * /api/events/{id}:
+   *   put:
+   *     summary: Mettre à jour un événement
+   *     tags: [Events]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID de l'événement
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               title:
+   *                 type: string
+   *                 maxLength: 100
+   *                 description: Titre de l'événement
+   *               description:
+   *                 type: string
+   *                 description: Description de l'événement
+   *               start_date:
+   *                 type: string
+   *                 format: date-time
+   *                 description: Date et heure de début de l'événement
+   *               end_date:
+   *                 type: string
+   *                 format: date-time
+   *                 description: Date et heure de fin de l'événement
+   *               location:
+   *                 type: string
+   *                 description: Lieu de l'événement
+   *               isActive:
+   *                 type: boolean
+   *                 description: Statut actif de l'événement
+   *     responses:
+   *       200:
+   *         description: Événement mis à jour avec succès
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   $ref: '#/components/schemas/Event'
+   *                 message:
+   *                   type: string
+   *                   example: Event updated successfully
+   *       400:
+   *         description: Données invalides
+   *       404:
+   *         description: Événement non trouvé
+   *       401:
+   *         description: Non authentifié
+   */
   updateEvent = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -145,6 +347,44 @@ export class EventController {
     }
   };
 
+  /**
+   * @swagger
+   * /api/events/{id}:
+   *   delete:
+   *     summary: Supprimer un événement
+   *     tags: [Events]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID de l'événement
+   *     responses:
+   *       200:
+   *         description: Événement supprimé avec succès
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   $ref: '#/components/schemas/Event'
+   *                 message:
+   *                   type: string
+   *                   example: Event deleted successfully
+   *       404:
+   *         description: Événement non trouvé
+   *       401:
+   *         description: Non authentifié
+   *       500:
+   *         description: Erreur serveur
+   */
   deleteEvent = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
@@ -177,6 +417,33 @@ export class EventController {
     }
   };
 
+  /**
+   * @swagger
+   * /api/events/active:
+   *   get:
+   *     summary: Récupérer tous les événements actifs
+   *     tags: [Events]
+   *     responses:
+   *       200:
+   *         description: Liste des événements actifs
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Event'
+   *                 message:
+   *                   type: string
+   *                   example: Retrieved 3 active events
+   *       500:
+   *         description: Erreur serveur
+   */
   getActiveEvents = async (req: Request, res: Response): Promise<void> => {
     try {
       const events = await this.eventService.getActiveEvents();
@@ -196,89 +463,4 @@ export class EventController {
       res.status(500).json(response);
     }
   };
-}
-
-export class ProjectController {
-  async createProject(req: Request, res: Response): Promise<void> {
-    try {
-      const projectData: IProject = {
-        ...req.body,
-        createdBy: req.user?._id
-      };
-      const project = await Project.create(projectData);
-      logger.info('Projet créé', { projectId: project._id, by: req.user?._id });
-      res.status(201).json({ success: true, data: project, message: 'Projet créé avec succès' });
-    } catch (error) {
-      logger.error('Erreur lors de la création d\'un projet', { error });
-      res.status(400).json({ success: false, error: error instanceof Error ? error.message : 'Erreur inconnue' });
-    }
-  }
-
-  async getAllProjects(req: Request, res: Response): Promise<void> {
-    try {
-      const projects = await Project.find().populate('createdBy', 'name email');
-      res.status(200).json({ success: true, data: projects });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error.message : 'Erreur inconnue' });
-    }
-  }
-
-  async getProjectById(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const project = await Project.findById(id).populate('createdBy', 'name email');
-      if (!project) {
-        res.status(404).json({ success: false, error: 'Projet non trouvé' });
-        return;
-      }
-      res.status(200).json({ success: true, data: project });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error instanceof Error ? error.message : 'Erreur inconnue' });
-    }
-  }
-
-  async updateProject(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const project = await Project.findById(id);
-      if (!project) {
-        res.status(404).json({ success: false, error: 'Projet non trouvé' });
-        return;
-      }
-      // Seul le créateur ou un admin peut modifier
-      if (req.user?.role !== 'admin' && String(project.createdBy) !== String(req.user?._id)) {
-        res.status(403).json({ success: false, error: 'Accès refusé' });
-        return;
-      }
-      Object.assign(project, req.body);
-      await project.save();
-      logger.info('Projet modifié', { projectId: project._id, by: req.user?._id });
-      res.status(200).json({ success: true, data: project, message: 'Projet modifié avec succès' });
-    } catch (error) {
-      logger.error('Erreur lors de la modification d\'un projet', { error });
-      res.status(400).json({ success: false, error: error instanceof Error ? error.message : 'Erreur inconnue' });
-    }
-  }
-
-  async deleteProject(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.params;
-      const project = await Project.findById(id);
-      if (!project) {
-        res.status(404).json({ success: false, error: 'Projet non trouvé' });
-        return;
-      }
-      // Seul le créateur ou un admin peut supprimer
-      if (req.user?.role !== 'admin' && String(project.createdBy) !== String(req.user?._id)) {
-        res.status(403).json({ success: false, error: 'Accès refusé' });
-        return;
-      }
-      await project.deleteOne();
-      logger.info('Projet supprimé', { projectId: project._id, by: req.user?._id });
-      res.status(200).json({ success: true, message: 'Projet supprimé avec succès' });
-    } catch (error) {
-      logger.error('Erreur lors de la suppression d\'un projet', { error });
-      res.status(400).json({ success: false, error: error instanceof Error ? error.message : 'Erreur inconnue' });
-    }
-  }
 } 

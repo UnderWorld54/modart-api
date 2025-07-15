@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ProjectController, projectSchema } from '../controllers/eventController';
+import { ProjectController, projectSchema } from '../controllers/projectController';
 import { authenticate } from '../middleware/auth';
 import { validateBody } from '../middleware/validate';
 
