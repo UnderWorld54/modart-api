@@ -11,6 +11,6 @@ COPY . .
 # Rendre le script exécutable
 RUN chmod +x docker-entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["./docker-entrypoint.sh"] 
