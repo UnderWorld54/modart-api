@@ -12,6 +12,7 @@ import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import eventRoutes from './routes/eventRoutes';
 import projectRoutes from './routes/projectRoutes';
+import studentRoutes from './routes/studentRoutes';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
 // Configuration
@@ -70,6 +71,7 @@ class App {
     this.app.use('/api/users', userRoutes);
     this.app.use('/api/events', eventRoutes);
     this.app.use('/api/projects', projectRoutes);
+    this.app.use('/api/students', studentRoutes);
   }
 
   private initializeErrorHandling(): void {

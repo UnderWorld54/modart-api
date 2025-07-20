@@ -78,12 +78,15 @@ export class AuthController {
         data: {
           user: user.toJSON(),
           token,
-          refreshToken
+          refreshToken,
+          mustChangePassword: user.mustChangePassword || false
         },
-        message: 'Login successful'
+        message: user.mustChangePassword ? 
+          'Login successful. You must change your temporary password.' : 
+          'Login successful'
       };
       
-      logger.info('Connexion réussie', { email: user.email, id: user._id });
+      logger.info('Connexion réussie', { email: user.email, id: user._id, mustChangePassword: user.mustChangePassword });
       res.status(200).json(response);
     } catch (error) {
       logger.warn('Échec de connexion', { email: req.body?.email, error });
@@ -200,6 +203,82 @@ export class AuthController {
     } catch (error) {
       logger.warn('Échec de refresh token', { refreshToken: req.body.refreshToken, error });
       res.status(401).json({ success: false, error: error instanceof Error ? error.message : 'Invalid refresh token' });
+    }
+  };
+
+  changeTemporaryPassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?._id;
+      const { currentPassword, newPassword } = req.body;
+      
+      if (!userId) {
+        const response: AuthResponse = {
+          success: false,
+          error: 'User not authenticated'
+        };
+        res.status(401).json(response);
+        return;
+      }
+
+      if (!currentPassword || !newPassword) {
+        const response: AuthResponse = {
+          success: false,
+          error: 'Current password and new password are required'
+        };
+        res.status(400).json(response);
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        const response: AuthResponse = {
+          success: false,
+          error: 'New password must be at least 6 characters long'
+        };
+        res.status(400).json(response);
+        return;
+      }
+
+      // Vérifier que l'utilisateur a besoin de changer son mot de passe
+      const user = await this.authService.getUserById(userId.toString());
+      
+      if (!user) {
+        const response: AuthResponse = {
+          success: false,
+          error: 'User not found'
+        };
+        res.status(404).json(response);
+        return;
+      }
+
+      if (!user.mustChangePassword) {
+        const response: AuthResponse = {
+          success: false,
+          error: 'Password change is not required for this user'
+        };
+        res.status(400).json(response);
+        return;
+      }
+
+      // Changer le mot de passe
+      await this.authService.changePassword(userId.toString(), currentPassword, newPassword);
+
+      // Mettre à jour les flags de mot de passe temporaire
+      await this.authService.updatePasswordFlags(userId.toString());
+
+      const response: AuthResponse = {
+        success: true,
+        message: 'Temporary password changed successfully'
+      };
+      
+      logger.info('Mot de passe temporaire changé avec succès', { userId, email: user.email });
+      res.status(200).json(response);
+    } catch (error) {
+      logger.error('Erreur lors du changement de mot de passe temporaire', { error, userId: req.user?._id });
+      const response: AuthResponse = {
+        success: false,
+        error: error instanceof Error ? error.message : 'Password change failed'
+      };
+      res.status(400).json(response);
     }
   };
 }

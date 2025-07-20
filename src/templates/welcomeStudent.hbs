@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue chez Mod'Art International</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .welcome-message {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .credentials-box {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        .credentials-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .credential-item {
+            margin: 12px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+        .credential-label {
+            font-weight: bold;
+            color: #6c757d;
+            display: inline-block;
+            width: 120px;
+        }
+        .credential-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            background-color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .login-button {
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 30px auto;
+            max-width: 200px;
+            transition: transform 0.3s ease;
+        }
+        .login-button:hover {
+            transform: translateY(-2px);
+        }
+        .important-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .footer-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .contact-info {
+            margin: 5px 0;
+        }
+        .divider {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🎨 Mod'Art International</div>
+            <p>École Supérieure d'Arts Appliqués</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <h1 class="welcome-title">Bienvenue {{firstName}} {{lastName}} !</h1>
+            
+            <div class="welcome-message">
+                Nous sommes ravis de vous accueillir au sein de la communauté <strong>Mod'Art International</strong>. 
+                Votre compte étudiant a été créé avec succès et vous pouvez dès maintenant accéder à votre espace personnel.
+            </div>
+
+            <hr class="divider">
+
+            <!-- Credentials -->
+            <div class="credentials-box">
+                <div class="credentials-title">🔐 Vos identifiants de connexion</div>
+                
+                <div class="credential-item">
+                    <span class="credential-label">Email :</span>
+                    <span class="credential-value">{{email}}</span>
+                </div>
+                
+                <div class="credential-item">
+                    <span class="credential-label">Mot de passe :</span>
+                    <span class="credential-value">{{temporaryPassword}}</span>
+                </div>
+            </div>
+
+            <div class="important-note">
+                <strong>⚠️ Important :</strong> Ce mot de passe est temporaire. Pour des raisons de sécurité, 
+                vous devrez le modifier lors de votre première connexion.
+            </div>
+
+            <!-- Login Button -->
+            <a href="{{loginUrl}}" class="login-button">
+                Se connecter maintenant
+            </a>
+
+            <hr class="divider">
+
+            <div style="text-align: center; color: #6c757d;">
+                <p>Une fois connecté(e), vous pourrez :</p>
+                <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                    <li>Consulter vos cours et emplois du temps</li>
+                    <li>Accéder aux ressources pédagogiques</li>
+                    <li>Communiquer avec vos professeurs</li>
+                    <li>Suivre votre progression académique</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-title">Mod'Art International</div>
+            <div class="contact-info">📧 contact@modart.fr</div>
+            <div class="contact-info">📞 01 42 86 57 00</div>
+            <div class="contact-info">📍 7 Rue des Petits Hôtels, 75010 Paris</div>
+            <div style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
+                © 2024 Mod'Art International. Tous droits réservés.
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

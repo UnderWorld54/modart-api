@@ -131,4 +131,16 @@ export class AuthService {
   async revokeRefreshToken(userId: string): Promise<void> {
     await User.findByIdAndUpdate(userId, { refreshToken: null });
   }
+
+  async updatePasswordFlags(userId: string): Promise<void> {
+    try {
+      await User.findByIdAndUpdate(userId, {
+        isTemporaryPassword: false,
+        mustChangePassword: false,
+        passwordChangedAt: new Date()
+      });
+    } catch (error) {
+      throw new Error(`Failed to update password flags: ${error}`);
+    }
+  }
 }

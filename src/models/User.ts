@@ -53,7 +53,18 @@ const UserSchema: Schema = new Schema(
           required: true
         }
       }
-    ]
+    ],
+    isTemporaryPassword: {
+      type: Boolean,
+      default: false
+    },
+    mustChangePassword: {
+      type: Boolean,
+      default: false
+    },
+    passwordChangedAt: {
+      type: Date
+    }
   },
   {
     timestamps: true

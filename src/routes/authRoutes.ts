@@ -145,6 +145,57 @@ router.put('/change-password', authenticate, authController.changePassword);
 
 /**
  * @swagger
+ * /api/auth/change-temporary-password:
+ *   put:
+ *     summary: Changer un mot de passe temporaire
+ *     description: Permet aux étudiants de changer leur mot de passe temporaire lors de la première connexion
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *                 description: Le mot de passe temporaire actuel
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 6
+ *                 description: Le nouveau mot de passe permanent
+ *     responses:
+ *       200:
+ *         description: Mot de passe temporaire modifié avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Temporary password changed successfully"
+ *       400:
+ *         description: Données invalides ou changement non requis
+ *       401:
+ *         description: Non authentifié
+ *       404:
+ *         description: Utilisateur non trouvé
+ */
+router.put('/change-temporary-password', authenticate, authController.changeTemporaryPassword);
+
+/**
+ * @swagger
  * /api/auth/refresh:
  *   post:
  *     summary: Rafraîchir le token d'accès avec un refresh token

@@ -16,6 +16,9 @@ export interface IUser {
   refreshToken?: string | null;
   socials?: SocialLink[];
   projects?: IProject[];
+  isTemporaryPassword?: boolean;
+  mustChangePassword?: boolean;
+  passwordChangedAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
